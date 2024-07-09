@@ -70,3 +70,8 @@ Route::get('/posts', function () {
         ->get();
     return $posts;
 });
+
+Route::get('/post-list', function () {
+    $posts = DB::table('posts')->get();
+    return view('post-list', compact('posts'));
+});
