@@ -65,13 +65,37 @@ Route::get('/posts', function () {
     //     ->where('view', '>', 800)
     //     ->get();
     //Nối 2 bảng categories và posts
+    // $posts = DB::table('posts')
+    //     ->join('categories', 'cate_id', '=', 'categories.id')
+    //     ->get();
+
     $posts = DB::table('posts')
-        ->join('categories', 'cate_id', '=', 'categories.id')
+        ->orderBy('view', 'desc')
+        ->limit(8)
         ->get();
     return $posts;
 });
 
 Route::get('/post-list', function () {
-    $posts = DB::table('posts')->get();
+    $posts =
+        DB::table('posts')
+        ->orderBy('view', 'desc')
+        ->limit(8)
+        ->get();
+
     return view('post-list', compact('posts'));
 });
+
+Route::get('/category/{id}', function ($id) {
+    $posts = DB::table('posts')
+        ->where('cate_id', $id)
+        ->get();
+    return view('post-list', compact('posts'));
+});
+
+Route::get('/post/{id}', function ($id) {
+    $post = DB::table('posts')
+        ->where('id', $id)
+        ->first();
+    return $post;
+})->name('post.detail');
