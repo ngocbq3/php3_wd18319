@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -63,5 +64,26 @@ class PostController extends Controller
     {
         $posts = Post::query()->paginate(10);
         return view('listPost', compact('posts'));
+    }
+    //Hiển thị form create
+    public function create()
+    {
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories'));
+    }
+
+    //Lưu dữ liệu được thêm vào database
+    public function store(Request $request)
+    {
+        $data = $request->except('image');
+        $data['image'] = "";
+        //Kiểm tra file
+        if ($request->hasFile('image')) {
+            $path_image = $request->file('image')->store('images');
+            $data['image'] = $path_image;
+        }
+        //Lưu data vào databse
+        Post::query()->create($data);
+        return redirect()->route('post.index')->with('message', 'Thêm dữ liệu thành công');
     }
 }
