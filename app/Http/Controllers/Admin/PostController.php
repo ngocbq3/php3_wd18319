@@ -86,4 +86,43 @@ class PostController extends Controller
         Post::query()->create($data);
         return redirect()->route('post.index')->with('message', 'Thêm dữ liệu thành công');
     }
+
+    //Xóa bài viết
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('post.index')->with('message', 'Xóa dữ liệu thành công');
+    }
+
+    //Hiển thị form edit
+    public function edit(Post $post)
+    {
+        $categories = Category::all();
+        return view('admin.posts.edit', compact('categories', 'post'));
+    }
+
+    //Cập nhật dữ liệu
+    public function update(Request $request, Post $post)
+    {
+        $data = $request->except('image');
+        $old_image = $post->image;
+        //Người dùng không upload ảnh mới
+        $data['image'] = $old_image;
+        //Người dùng upload ảnh
+        if ($request->hasFile('image')) {
+            $path_image = $request->file('image')->store('images');
+            $data['image'] = $path_image;
+        }
+
+        //update data
+        $post->update($data);
+        //Xóa ảnh
+        if ($request->hasFile('image')) {
+            if (file_exists('storage/' . $old_image)) {
+                unlink('storage/' . $old_image);
+            }
+        }
+
+        return redirect()->back()->with('message', 'Cập nhật dữ liệu thành công');
+    }
 }
