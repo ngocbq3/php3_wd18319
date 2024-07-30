@@ -10,6 +10,13 @@
 
 <body>
     <h1>Danh sách sách</h1>
+    <!--Hiển thị tài khoản-->
+    @auth
+        <div>
+            Fullname: {{ Auth::user()->fullname }}
+            <a href="{{ route('logout') }}">Logout</a>
+        </div>
+    @endauth
     @if (session('message'))
         <div class="alert alert-success">
             {{ session('message') }}
