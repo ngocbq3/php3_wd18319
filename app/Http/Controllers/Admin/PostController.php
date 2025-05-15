@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -60,6 +61,11 @@ class PostController extends Controller
 
         // Post::query()->find(101)->delete();
         // return $posts;
+    }
+    public function list()
+    {
+        $posts = DB::table('posts')->paginate(10);
+        return view('test', compact('posts'));
     }
     public function index()
     {

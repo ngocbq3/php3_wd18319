@@ -130,3 +130,6 @@ Route::post('/register', [LoginController::class, 'postRegister'])->name('postRe
 
 //Sendmail
 Route::get('sendmail', [SendMailController::class, 'send']);
+
+
+Route::get('test', [PostController::class, 'list']);
